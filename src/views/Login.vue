@@ -35,7 +35,16 @@
 
 <script>
     import Axios from 'axios';
+    import config from "@/config";
     export default {
+        beforeRouteEnter(to, from, next) {
+            if (localStorage.getItem("auth")) {
+                return next({ path: "/"});
+            }
+
+            next();
+
+        },
         data() {
             return {
                email: '',
@@ -47,7 +56,7 @@
         methods: {
             loginUser() {
                 this.loading = true;
-                Axios.post('http://localhost:5000/auth', {
+                Axios.post(`${config.apiUrl}/auth`, {
                     email: this.email,
                     password: this.password
                 }).then((response) => {

@@ -16,7 +16,10 @@
                         <input v-model="password" type="password" placeholder="Password" class="form-control">
                     </div>
                     <div class="form-group text-center">
-                        <button @click="registerUser()" class="btn btn-success form-control">Signup</button>
+                        <button @click="registerUser()" :disabled="loading" class="btn btn-success form-control">
+                            <i class="fas fa-spin fa-spinner" v-if="loading"></i>
+                            {{ loading ? '' : 'Register' }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -26,24 +29,40 @@
 
 <script>
     import Axios from 'axios';
+    import config from "@/config";
     export default {
+        beforeRouteEnter(to, from, next) {
+            if (localStorage.getItem("auth")) {
+                return next({ path: "/"});
+            }
+
+            next();
+
+        },
         data() {
             return {
                 name: '',
                 email: '',
-                password: ''
+                password: '',
+                loading: false
             }
         },
         methods: {
             registerUser(){
+                this.loading = true;
                 console.log(this.name, this.email, this.password);
-                Axios.post('http://localhost:5000/register', {
+                Axios.post(`${config.apiUrl}/register`, {
                     name: this.name,
                     email: this.email,
                     password: this.password
                 }).then(response =>{
-                    console.log(response)
+                    this.loading = false;
+                    console.log(response);
+                    this.$noty.success("Registered Sucessfully!");
+                    this.$router.push("/")
                 }).catch(({ response }) => {
+                    this.loading = false;
+                    this.$noty.error("Oops, something went wrong!");
                     console.log(response)
                 })
             }
