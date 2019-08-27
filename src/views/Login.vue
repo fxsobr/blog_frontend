@@ -52,13 +52,13 @@
                     password: this.password
                 }).then((response) => {
                     this.loading = false;
-                    console.log(response);
-                    console.log(response.data);
-                    this.$root.auth = response.data.access_token;
+                    this.$root.auth = response.data;
                     localStorage.setItem('auth', JSON.stringify(response.data));
-                    this.$router.push("home")
+                    this.$noty.success("Sucessfully authenticated!");
+                    this.$router.push("/")
                 }).catch(({response}) => {
                     this.loading = false;
+                    this.$noty.error("Oops, something went wrong!");
                     console.log(response);
                     this.errors = response.data.message;
                 })

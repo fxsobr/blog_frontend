@@ -43,7 +43,8 @@
         methods: {
             logout() {
                 localStorage.removeItem('auth');
-                this.$root.auth = {}
+                this.$root.auth = {};
+                this.$noty.warning("Sucessfully logged out.");
             }
         }
     }
