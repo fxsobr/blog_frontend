@@ -31,6 +31,8 @@
 </template>
 
 <script>
+    import Axios from 'axios';
+    import config from "@/config";
     export default {
         mounted() {
             console.log(this.$root)
@@ -42,9 +44,19 @@
         },
         methods: {
             logout() {
-                localStorage.removeItem('auth');
-                this.$root.auth = {};
-                this.$noty.warning("Sucessfully logged out.");
+                Axios.post(`${config.apiUrl}/logout`, null, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization' : `Bearer ${this.$root.auth.access_token}`,
+                    }
+                }).then(response => {
+                    localStorage.removeItem('auth');
+                    this.$root.auth = {};
+                    this.$noty.warning(response.data.message);
+                    console.log(response.data.message)
+                }).catch(({response}) => {
+                    this.$noty.error(response.data.message);
+                })
             }
         }
     }
