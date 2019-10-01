@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-md-8 offset-md-2" v-if="articles" v-for="article in articles" :key="article.id">
+        <div class="col-md-8 offset-md-2" v-for="article in articles" :key="article.id">
             <Article :article="article"/>
         </div>
     </div>
